@@ -4,11 +4,13 @@ const sequelize = require("../../config/connection");
 
 // The `/api/categories` endpoint
 
+// find all categories
 router.get("/", async (req, res) => {
   try {
     const allCategories = await Category.findAll({
       include: [
         {
+          // include its associated Products
           model: Product,
           attributes: ["id", "product_name", "price", "stock"],
         },
@@ -19,17 +21,16 @@ router.get("/", async (req, res) => {
     console.error(error);
     res.status(500).json(error);
   }
-
-  // find all categories
-  // be sure to include its associated Products
 });
 
+// find one category by its `id` value
 router.get("/:id", async (req, res) => {
   try {
     const oneCategory = await Category.findOne({
       where: {
         id: req.params.id,
       },
+      // include its associated Products
       include: [
         {
           model: Product,
@@ -46,8 +47,6 @@ router.get("/:id", async (req, res) => {
     console.error(error);
     res.status(500).json(error);
   }
-  // find one category by its `id` value
-  // be sure to include its associated Products
 });
 
 router.post("/", async (req, res) => {
@@ -63,6 +62,7 @@ router.post("/", async (req, res) => {
   // create a new category
 });
 
+// update a category by its `id` value
 router.put("/:id", async (req, res) => {
   try {
     const updatedCategory = await Category.update(req.body, {
@@ -79,9 +79,9 @@ router.put("/:id", async (req, res) => {
     console.error(error);
     res.status(500).json(error);
   }
-  // update a category by its `id` value
 });
 
+// delete a category by its `id` value
 router.delete("/:id", async (req, res) => {
   try {
     const deletedCategory = await Category.destroy({
@@ -98,7 +98,6 @@ router.delete("/:id", async (req, res) => {
     console.error(error);
     res.status(500).json(error);
   }
-  // delete a category by its `id` value
 });
 
 module.exports = router;
